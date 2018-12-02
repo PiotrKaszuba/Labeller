@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CsvHelper;
+using Labeller.Properties;
+
 namespace Labeller
 {
    
@@ -19,36 +21,37 @@ namespace Labeller
         public PathProvider pathProvider;
         public CSVSaver CSVSaver;
         public CSVStructure CSVStructure;
-        public InformationCSVMerger cSVMerger;
+        public InformationCSVMerger<PatientRecord> cSVMerger;
         public int currentParameter;
         public int showing = 1;
         public Form1()
         {
             InitializeComponent();
-            pathProvider = new PathProvider();
-            CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + "/data.csv");
+            CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + Resources.dataRelativePath);
+            pathProvider = new PathProvider(CSVSaver);
+           
             currentParameter = 0;
-            cSVMerger = new InformationCSVMerger(Directory.GetCurrentDirectory() + "/data_anonymized_and_after_extraction.csv");
+            cSVMerger = new InformationCSVMerger<PatientRecord>(Directory.GetCurrentDirectory() + Resources.patientDataRelativePath);
 
         }
         private void loadPatientInfo()
         {
             PatientCountValue.Text = "" + pathProvider.currentPath;
-           PatientRecord rec =  cSVMerger.getRecord(pathProvider.paths[pathProvider.currentPath]);
-            //string newPath = Path.GetFullPath(Path.Combine(slider.path, @"..\"));
+           PatientRecord rec =  InformationCSVMerger<PatientRecord>.getRecord(pathProvider.paths[pathProvider.currentPath], cSVMerger.getRecords());
+           
             if (rec == null)
             {
-                SexValue.Text = ""; //File.ReadAllText(newPath + "sex.txt");
-                AgeValue.Text = "";//File.ReadAllText(newPath + "age.txt");
-                ICDValue.Text = "";//File.ReadAllText(newPath + "correct_icd_code.txt");
-                DescriptionBox.Text = "";//File.ReadAllText(newPath + "description1.txt");
+                SexValue.Text = ""; 
+                AgeValue.Text = "";
+                ICDValue.Text = "";
+                DescriptionBox.Text = "";
             }
             else
             {
-                SexValue.Text = rec.sex; //File.ReadAllText(newPath + "sex.txt");
-                AgeValue.Text = rec.age;//File.ReadAllText(newPath + "age.txt");
-                ICDValue.Text = rec.correct_icd_code;//File.ReadAllText(newPath + "correct_icd_code.txt");
-                DescriptionBox.Text = rec.description1;//File.ReadAllText(newPath + "description1.txt");
+                SexValue.Text = rec.sex; 
+                AgeValue.Text = rec.age;
+                ICDValue.Text = rec.correct_icd_code;
+                DescriptionBox.Text = rec.description1;
             }
             loadImageInfo();
             CSVStructure = new CSVStructure();
@@ -91,6 +94,10 @@ namespace Labeller
         }
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode.Equals(Keys.Back))
+            {
+                CSVSaver.deleteLastRecord();
+            }
             if (e.KeyCode.Equals(Keys.Q))
             {
                 CSVStructure = new CSVStructure();
@@ -98,7 +105,7 @@ namespace Labeller
             }
             if (e.KeyCode.Equals(Keys.L))
             {
-                CSVStructure.eye = CSVStructure.GetNewVal(CSVStructure.eye, 1, 1);
+                CSVStructure.eye = Utils.GetNewVal(CSVStructure.eye, 1, 1);
                 CSVStructure.eyeImage = ImageValue.Text;
                 refreshFeatures();
             }
@@ -118,10 +125,7 @@ namespace Labeller
             }
             if (e.KeyCode.Equals(Keys.Space))
             {
-                if (CSVStructure.ObrzekImage.Equals(ImageValue.Text))
-                    CSVStructure.Obrzek = CSVStructure.GetNewVal(CSVStructure.Obrzek, 1, CSVStructure.ObrzekMax);
-                CSVStructure.ObrzekImage = ImageValue.Text;
-                refreshFeatures();
+                CSVSaver.addDeleted();
             }
             if (e.KeyCode.Equals(Keys.A))
             {
@@ -175,8 +179,7 @@ namespace Labeller
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            //CSVStructure.PierscienX = e.X;
-            //CSVStructure.PierscienY = e.Y;
+           
             if (e.Button.Equals(MouseButtons.Left))
             {
                 CSVStructure.SrodekX = e.X;

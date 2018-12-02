@@ -44,7 +44,7 @@ namespace Labeller
             }
            
             
-            //g.DrawRectangle(myPen, rect);
+         
             
             return im;
         }

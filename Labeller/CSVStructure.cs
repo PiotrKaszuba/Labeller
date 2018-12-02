@@ -8,68 +8,54 @@ namespace Labeller
 {
     public class CSVStructure
     {
-        public int Obrzek;
+        public static int maxParameter = 14;
+
+        //Obrzek
+        public int Obrzek { get; set; } = -1;
+        public String ObrzekImage { get; set; } = "";
+
         public static int ObrzekMax = 1;
         public static string ObrzekInstruction = "0 = false, 1 = true";
-        public String ObrzekImage;
-
-        public int PierscienX;
-        public int PierscienY;
-        public float PierscienR;
-        public float PierscienStartR;
         
-        public List<float> PierscienStartAngle;
-        public List<float> PierscienStopAngle;
-        public static float PierscienMaxAngle = 360;
-        public String PierscienImage;
-        public static int maxParameter =14;
-        public int currentAngle;
-        public int eye;
-        public String eyeImage;
 
-        public int Krawedz;
+        //Pierscien
+        public int PierscienX { get; set; } = -1;
+        public int PierscienY { get; set; } = -1;
+        public int PierscienR { get; set; } = 40;
+        public int PierscienStartR { get; set; } = 37;
+        public List<int> PierscienStartAngle = new List<int>();
+        public List<int> PierscienStopAngle = new List<int>();
+        public String PierscienImage { get; set; } = "";
+
+
+        
+
+        public static int PierscienMaxAngle = 360; 
+        public int currentAngle= -1;
+
+        //Eye
+        public int eye { get; set; } = -1;
+        public String eyeImage { get; set; } = "";
+
+        //Krawedz
+        public int Krawedz { get; set; } = -1;
+        public String KrawedzImage { get; set; } = "";
+
         public static int KrawedzMax = 3;
-        public String KrawedzImage;
         public static String KrawedzInstruction = "0 - ok, 1 - rozmyta, 2 - dziwne ksztalty, 3 - fluoro";
+        
+        //Wyjscie
+        public int WyjscieX { get; set; } = -1;
+        public int WyjscieY { get; set; } = -1;
+        public int WyjscieR { get; set; } =  8;
+        public String WyjscieImage { get; set; } = "";
 
-        public int WyjscieX;
-        public int WyjscieY;
-        public int WyjscieR;
-        public String WyjscieImage;
+        //Srodek
+        public int SrodekX { get; set; } = -1;
+        public int SrodekY { get; set; } = -1;
+        public int SrodekR { get; set; } = 40;
+        public String SrodekImage { get; set; } = "";
 
-        public int SrodekX;
-        public int SrodekY;
-        public int SrodekR;
-        public String SrodekImage;
-
-       public CSVStructure()
-        {
-            Obrzek = -1;
-            ObrzekImage = "";
-            PierscienX = -1;
-            PierscienY = -1;
-            PierscienR = 40;
-            PierscienStartR = 37;
-            PierscienStartAngle = new List<float>();
-            PierscienStopAngle = new List<float>();
-            PierscienImage = "";
-            currentAngle = -1;
-            eye = -1;
-
-            WyjscieX = -1;
-            WyjscieY = -1;
-            WyjscieR = 8;
-            WyjscieImage = "";
-
-            SrodekX = -1;
-            SrodekY = -1;
-            SrodekR = 40;
-
-            Krawedz = -1;
-            KrawedzImage = "";
-
-
-        }
 
         public void changeCurrentAngle(int change)
         {
@@ -119,7 +105,7 @@ namespace Labeller
                 case 14:
                     return "Pierscien StopAngle: " + String.Join(";", PierscienStopAngle) + ", Image: " + PierscienImage;
                 case 7:
-                    return "Eye side: " + getEyeName(eye) + ", Image: " + eyeImage;
+                    return "Eye side: " + Utils.getEyeName(eye) + ", Image: " + eyeImage;
             }
             return null;
         }
@@ -128,87 +114,85 @@ namespace Labeller
             switch (index)
             {
                 case 0:
-                    Krawedz = GetNewVal(Krawedz, value, KrawedzMax);
+                    Krawedz = Utils.GetNewVal(Krawedz, value, KrawedzMax);
                     KrawedzImage = Image;
                     return Krawedz;
                     break;
                 case 1:
-                    SrodekX = GetNewVal(SrodekX, value, 999);
+                    SrodekX = Utils.GetNewVal(SrodekX, value, 999);
                     SrodekImage = Image;
                     return SrodekX;
                     break;
                 case 2:
-                    SrodekY = GetNewVal(SrodekY, value, 999);
+                    SrodekY = Utils.GetNewVal(SrodekY, value, 999);
                     SrodekImage = Image;
                     return SrodekY;
                     break;
                 case 3:
-                    SrodekR = GetNewVal(SrodekR, value, 999);
+                    SrodekR = Utils.GetNewVal(SrodekR, value, 999);
                     SrodekImage = Image;
                     return SrodekR;
                     break;
                 case 4:
-                    WyjscieX = GetNewVal(WyjscieX, value, 999);
+                    WyjscieX = Utils.GetNewVal(WyjscieX, value, 999);
                     WyjscieImage = Image;
                     return WyjscieX;
                     break;
                 case 5:
-                    WyjscieY = GetNewVal(WyjscieY, value, 999);
+                    WyjscieY = Utils.GetNewVal(WyjscieY, value, 999);
                     WyjscieImage = Image;
                     return WyjscieY;
                     break;
                 case 6:
-                    WyjscieR = GetNewVal(WyjscieR, value, 999);
+                    WyjscieR = Utils.GetNewVal(WyjscieR, value, 999);
                     WyjscieImage = Image;
                     return WyjscieR;
                     break;
                 case 8:
-                    Obrzek = GetNewVal(Obrzek, value, ObrzekMax);
+                    Obrzek = Utils.GetNewVal(Obrzek, value, ObrzekMax);
                     ObrzekImage = Image;
                     return Obrzek;
                     break;
                 case 9:
-                    PierscienX = GetNewVal(PierscienX, value, 999);
+                    PierscienX = Utils.GetNewVal(PierscienX, value, 999);
                     PierscienImage = Image;
                     return PierscienX;
                     break;
                 case 10:
-                    PierscienY = GetNewVal(PierscienY, value, 999);
+                    PierscienY = Utils.GetNewVal(PierscienY, value, 999);
                     PierscienImage = Image;
                     return PierscienY;
                     break;
                 case 11:
-                    PierscienR = GetNewVal(PierscienR, value, 999);
+                    PierscienR = Utils.GetNewVal(PierscienR, value, 999);
                     PierscienImage = Image;
                     return (int)PierscienR;
                     break;
                 case 12:
-                    PierscienStartR = GetNewVal(PierscienStartR, value, PierscienR);
+                    PierscienStartR = Utils.GetNewVal(PierscienStartR, value, PierscienR);
                     PierscienImage = Image;
                     return (int)PierscienStartR;
                     break;
                 case 13:
-                    PierscienStartAngle[currentAngle] = GetNewVal(PierscienStartAngle[currentAngle], (float)value, PierscienStopAngle[currentAngle]);
+                    PierscienStartAngle[currentAngle] = Utils.GetNewVal(PierscienStartAngle[currentAngle], value, PierscienStopAngle[currentAngle]);
                     PierscienImage = Image;
                     return (int)PierscienStartAngle[currentAngle];
                     break;
                 case 14:
-                    PierscienStopAngle[currentAngle] = GetNewVal(PierscienStopAngle[currentAngle], (float)value, 360);
+                    PierscienStopAngle[currentAngle] = Utils.GetNewVal(PierscienStopAngle[currentAngle], value, 360);
                     PierscienImage = Image;
                     return (int)PierscienStopAngle[currentAngle];
                     break;
                 case 7:
-                    eye = GetNewVal(eye, value, 1);
+                    eye = Utils.GetNewVal(eye, value, 1);
                     eyeImage = Image;
                     return eye;
 
             }
             return 0;
         }
-        public static String getEyeName(int eye)
-        {
-            return eye == 0 ? "left_eye_images" : "right_eye_images";
-        }
+
+        
         public static void writeHeader(CsvWriter writer)
         {
             writer.WriteField("Patient");
@@ -241,23 +225,11 @@ namespace Labeller
 
         public void writeRecord(CsvWriter writer, String path)
         {
-            String[] Dirs = path.Split('\\');
-            if(Dirs.Length ==1)
-                Dirs = path.Split('/');
-            //path = String.Join("\\", Dirs.Skip(Dirs.Length - 3));
-            if (path.Contains("eye_images"))
-            {
-                writer.WriteField(Dirs[Dirs.Length - 3]);
-                writer.WriteField(Dirs[Dirs.Length - 2]);
-                writer.WriteField(Dirs[Dirs.Length - 1]);
-            }
-            else
-            {
-                writer.WriteField(Dirs[Dirs.Length - 3]);
-                writer.WriteField(Dirs[Dirs.Length - 2]);
-                writer.WriteField(getEyeName(eye));
-              
-            }
+
+
+            writer.WriteField(Utils.getPatient(path));
+            writer.WriteField(Utils.getDate(path));
+            writer.WriteField(Utils.getEye(path, eye));
             writer.WriteField(eyeImage);
             writer.WriteField(ImageSlider.WIDTH);
             writer.WriteField(ImageSlider.HEIGHT);
@@ -283,12 +255,6 @@ namespace Labeller
             
         }
         
-        public static int GetNewVal(int val, int increment, int maxVal){
-            return val + increment > maxVal ? -1 : val + increment < 0 ? maxVal : val + increment;
-        }
-        public static float GetNewVal(float val, float increment, float maxVal)
-        {
-            return val + increment > maxVal ? -1 : val + increment < 0 ? maxVal : val + increment;
-        }
+      
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Labeller.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Labeller
 {
@@ -12,8 +14,11 @@ namespace Labeller
     {
         public List<String> paths;
         public int currentPath;
-        public PathProvider()
+        public CSVSaver CSVSaver { get; set; }
+        public PathProvider(CSVSaver cSVSaver)
+       
         {
+            this.CSVSaver = cSVSaver;
             paths = new List<string>();
             currentPath = -1;
         }
@@ -26,7 +31,7 @@ namespace Labeller
         private String run_cmd(string cmd, string args)
         {
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "C:/Users/Piotr/AppData/Local/Programs/Python/Python36/python.exe";
+            start.FileName = Resources.pythonPath;
             start.Arguments = string.Format("{0} {1}", cmd, args);
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
@@ -40,10 +45,21 @@ namespace Labeller
                 }
             }
         }
-
-        private String getPath()
+        private bool analyzePath(String path)
         {
-            return run_cmd(Directory.GetCurrentDirectory()+"/template.py", "");
+            InformationCSVMerger<CSVRecord> informationCSVMerger = new InformationCSVMerger<CSVRecord>(CSVSaver.CsvPath);
+            if (InformationCSVMerger<CSVRecord>.getRecord(path, informationCSVMerger.getRecords()) == null) return true;
+            else return false;
+        }
+        private String getPath(int times = 0)
+        {
+            if(times >100)
+            {
+                MessageBox.Show("Przekroczono limit losowania bez powtorzenia - zmien dane");
+                Application.Exit();
+            }
+            String path = run_cmd(Directory.GetCurrentDirectory() + Resources.pythonPathProviderRelativePath, "");
+            return analyzePath(path) ? path : getPath(times +1);
         }
 
         private void checkPathLength()

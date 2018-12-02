@@ -5,55 +5,76 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Labeller
 {
-   public class InformationCSVMerger
+    
+   public class InformationCSVMerger<T>
     {
         public String path;
-        public List<PatientRecord> recordsList;
+        private List<T> records;
+
+        public List<T> getRecords()
+        {
+            if(records == null)
+            {
+                this.records = ReadInCSV(this.path);
+            }
+            return records;
+        }
+
         public InformationCSVMerger(String path)
         {
             this.path = path;
-            this.recordsList = ReadInCSV(this.path);
         }
 
-        private void openFile()
+     
+        public static PatientRecord getRecord(string path, List<PatientRecord> list)
         {
+            String patient = Utils.getPatient(path);
+            String date = Utils.getDate(path);
 
+            return list.Find(x => x.md5.Equals(patient) && x.examination_date.Equals(date));
         }
-        public PatientRecord getRecord(string path)
+
+        public static CSVRecord getRecord(string path, List<CSVRecord> list)
         {
-            String patient;
-            String date;
-            String[] Dirs = path.Split('/');
-            if (path.Contains("eye_images"))
-            {
-                patient = Dirs[Dirs.Length - 4];
-                date = Dirs[Dirs.Length - 3];
+            String patient = Utils.getPatient(path);
+            String date = Utils.getDate(path);
 
-            }
-            else
-            {
-                patient = Dirs[Dirs.Length -3];
-                date = Dirs[Dirs.Length-2];
-            }
-            return recordsList.Find(x => x.md5.Equals(patient) && x.examination_date.Equals(date));
+            return list.Find(x => x.Patient.Equals(patient) && x.Date.Equals(date));
         }
-        public static List<PatientRecord> ReadInCSV(string absolutePath)
+
+
+     
+
+        public List<T> ReadInCSV(string absolutePath)
         {
-            using (var sr = new StreamReader(absolutePath))
+            try
             {
-                var reader = new CsvReader(sr);
+                using (var sr = new StreamReader(absolutePath))
+                {
+                    var reader = new CsvReader(sr);
 
-                //CSVReader will now read the whole file into an enumerable
-                List<PatientRecord> records = reader.GetRecords<PatientRecord>().ToList();
-                return records;
 
+                    List<T> records = reader.GetRecords<T>().ToList();
+                    return records;
+
+                }
             }
-            
-           
+            catch (Exception e)
+            {
+                MessageBox.Show("Nie mozna odczytac - zamknij plik z danymi");
+                return ReadInCSV(absolutePath);
+            }
+
+
         }
+
+
+
+
 
 
     }

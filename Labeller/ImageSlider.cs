@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Labeller.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -25,7 +26,7 @@ namespace Labeller
             
             this.box = box;
             this.path = path;
-            imagePaths = Directory.GetFiles(this.path, "*.jpg");
+            imagePaths = Directory.GetFiles(this.path, Resources.imageExtension);
             currentImage = 0;
             loadImage();
         }
