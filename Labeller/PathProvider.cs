@@ -12,26 +12,27 @@ namespace Labeller
 {
     public class PathProvider
     {
-        public List<String> paths;
-        public int currentPath;
-        public CSVSaver CSVSaver { get; set; }
-        public PathProvider(CSVSaver cSVSaver)
-       
-        {
-            this.CSVSaver = cSVSaver;
-            paths = new List<string>();
-            currentPath = -1;
-        }
 
-        public String changePath(int change)
+        public String executablePath;
+        public String codePath;
+        public String args;
+        public PathProvider(String executablePath = null, String codePath = null, String args = null)
         {
-            currentPath += change;
-            return getCurrentPath();
+            if (executablePath == null) executablePath = PropertiesReader.PATH_PROVIDER_EXECUTABLE_PATH;
+            if (codePath == null) codePath = Directory.GetCurrentDirectory() + PropertiesReader.PATH_PROVIDER_CODE_RELATIVE_PATH;
+            if (args == null) args = PropertiesReader.PATH_PROVIDER_ADDITIONAL_ARGS;
+            this.executablePath = executablePath;
+            this.codePath = codePath;
+            this.args = args;
         }
-        private String run_cmd(string cmd, string args)
+       
+     
+
+    
+        private String run_cmd(string executable, string cmd, string args)
         {
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = Resources.pythonPath;
+            start.FileName = executable;
             start.Arguments = string.Format("{0} {1}", cmd, args);
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
@@ -41,43 +42,20 @@ namespace Labeller
                 {
                     string result = reader.ReadToEnd();
                  
-                    return result.Replace("\r\n", "");
+                    return result;
                 }
             }
         }
-        private bool analyzePath(String path)
+        private String formatOutput(String path)
         {
-            InformationCSVMerger<CSVRecord> informationCSVMerger = new InformationCSVMerger<CSVRecord>(CSVSaver.CsvPath);
-            if (InformationCSVMerger<CSVRecord>.getRecord(path, informationCSVMerger.getRecords()) == null) return true;
-            else return false;
+            return path.Replace("\r\n", "");
         }
-        private String getPath(int times = 0)
+        public String getPath()
         {
-            if(times >100)
-            {
-                MessageBox.Show("Przekroczono limit losowania bez powtorzenia - zmien dane");
-                Application.Exit();
-            }
-            String path = run_cmd(Directory.GetCurrentDirectory() + Resources.pythonPathProviderRelativePath, "");
-            return analyzePath(path) ? path : getPath(times +1);
+            return formatOutput(run_cmd(this.executablePath, this.codePath, this.args));
         }
 
-        private void checkPathLength()
-        {
-            if (currentPath < 0)
-                currentPath = 0;
-            if(currentPath >= paths.Count)
-            {
-                paths.Add(getPath());
-                checkPathLength();
-            }
-        }
 
-        public String getCurrentPath()
-        {
-            checkPathLength();
-            return paths[currentPath];
-        }
 
     }
 }

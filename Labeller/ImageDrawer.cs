@@ -29,15 +29,17 @@ namespace Labeller
         }
         public static Image drawPierscien(Image im, CSVStructure ob)
         {
-            float penWidth = ob.PierscienR - ob.PierscienStartR;
             
-            int diameter = (int)ob.PierscienR * 2 - (int)penWidth;
-            int rectLeft = ob.PierscienX - (int)(diameter/2);
-            int rectTop = ob.PierscienY - (int)(diameter / 2);
             Graphics g = Graphics.FromImage(im);
-            Pen myPen = new Pen(Color.Red, penWidth);
+            
             for(int i =0; i< ob.PierscienStartAngle.Count; i++)
             {
+                float penWidth = ob.PierscienR[i] - ob.PierscienStartR[i];
+
+                int diameter = (int)ob.PierscienR[i] * 2 - (int)penWidth;
+                int rectLeft = ob.PierscienX - (int)(diameter / 2);
+                int rectTop = ob.PierscienY - (int)(diameter / 2);
+                Pen myPen = new Pen(Color.Red, penWidth);
                 int arc = (int)ob.PierscienStopAngle[i] - (int)ob.PierscienStartAngle[i];
                 Rectangle rect = new Rectangle(rectLeft,  rectTop, diameter, diameter);
                 g.DrawArc(myPen, rect, (int)ob.PierscienStartAngle[i], arc);

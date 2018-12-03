@@ -123,13 +123,13 @@ ESC - save to CSV
 A/D - previous/next patient
 Left/Right - previous/next image
 Up/Down - previous/next parameter
-Mouse scroll - modify highlited parameter
+Mouse scroll - modify highlited parameter +Shift x10 magnitude
 Left image click - Srodek Tarczy + Pierscien center
 Right image click - Wyjscie naczyn center
 L - left/right eye
 Z/X - previous/next Pierscien angle
 Control - hide/show drawings
-Backspace - delete last row from CSV
+Backspace/Delete - delete last/loaded row from CSV
 Space - add last deleted row again - only 1 in memory!</value>
   </data>
 </root>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using CsvHelper;
 namespace Labeller
 {
@@ -10,6 +11,11 @@ namespace Labeller
     {
         public static int maxParameter = 14;
 
+
+        public String Patient { get; set; }
+        public String Date { get; set; }
+        public int Width { get; set; } = ImageSlider.WIDTH;
+        public int Height { get; set; } = ImageSlider.HEIGHT;
         //Obrzek
         public int Obrzek { get; set; } = -1;
         public String ObrzekImage { get; set; } = "";
@@ -21,12 +27,16 @@ namespace Labeller
         //Pierscien
         public int PierscienX { get; set; } = -1;
         public int PierscienY { get; set; } = -1;
-        public int PierscienR { get; set; } = 40;
-        public int PierscienStartR { get; set; } = 37;
+        public List<int> PierscienR { get; set; } = new List<int>();
+        public List<int> PierscienStartR { get; set; } = new List<int>();
         public List<int> PierscienStartAngle = new List<int>();
         public List<int> PierscienStopAngle = new List<int>();
         public String PierscienImage { get; set; } = "";
 
+        private int PierscienRDefault = 38;
+        private int PierscienStartRDefault = 35;
+        private int PierscienStartAngleDefault = 0;
+        private int PierscienStopAngleDefault = 360;
 
         
 
@@ -36,6 +46,8 @@ namespace Labeller
         //Eye
         public int eye { get; set; } = -1;
         public String eyeImage { get; set; } = "";
+
+        public static int eyeMax = 1;
 
         //Krawedz
         public int Krawedz { get; set; } = -1;
@@ -53,8 +65,19 @@ namespace Labeller
         //Srodek
         public int SrodekX { get; set; } = -1;
         public int SrodekY { get; set; } = -1;
-        public int SrodekR { get; set; } = 40;
+        public int SrodekR { get; set; } = 38;
         public String SrodekImage { get; set; } = "";
+
+        public static CSVStructure getStructure(CSVRecord CSVRecord = null)
+        {
+            if (CSVRecord != null)
+            {
+                return Mapper.Map<CSVStructure>(CSVRecord);
+            }
+            else
+                return new CSVStructure();
+
+        }
 
 
         public void changeCurrentAngle(int change)
@@ -66,8 +89,10 @@ namespace Labeller
             }
             if(currentAngle >= PierscienStartAngle.Count)
             {
-                PierscienStartAngle.Add(0);
-                PierscienStopAngle.Add(0);
+                PierscienR.Add(PierscienRDefault);
+                PierscienStartR.Add(PierscienStartRDefault);
+                PierscienStartAngle.Add(PierscienStartAngleDefault);
+                PierscienStopAngle.Add(PierscienStopAngleDefault);
             }
         }
         public String getShowText(int index)
@@ -75,7 +100,7 @@ namespace Labeller
             
             switch (index)
             {
-                case 0:
+                case 7:
                     return "Krawedz: " + Krawedz + ", Image: " + KrawedzImage + ",    " + KrawedzInstruction;
                 case 1:
                     return "Srodek X: " + SrodekX + ", Image: " + SrodekImage;
@@ -97,14 +122,14 @@ namespace Labeller
                 case 10:
                     return "Pierscien Y: " + PierscienY + ", Image: " + PierscienImage;
                 case 11:
-                    return "Pierscien R: " + PierscienR + ", Image: " + PierscienImage;
+                    return "Pierscien R: " + String.Join(";", PierscienR) + ", Image: " + PierscienImage;
                 case 12:
-                    return "Pierscien StartR: " + PierscienStartR + ", Image: " + PierscienImage;
+                    return "Pierscien StartR: " + String.Join(";", PierscienStartR) + ", Image: " + PierscienImage;
                 case 13:
                     return "Pierscien StartAngle: " + String.Join(";",PierscienStartAngle)+ ", Image: " + PierscienImage;
                 case 14:
                     return "Pierscien StopAngle: " + String.Join(";", PierscienStopAngle) + ", Image: " + PierscienImage;
-                case 7:
+                case 0:
                     return "Eye side: " + Utils.getEyeName(eye) + ", Image: " + eyeImage;
             }
             return null;
@@ -113,38 +138,38 @@ namespace Labeller
         {
             switch (index)
             {
-                case 0:
+                case 7:
                     Krawedz = Utils.GetNewVal(Krawedz, value, KrawedzMax);
                     KrawedzImage = Image;
                     return Krawedz;
                     break;
                 case 1:
-                    SrodekX = Utils.GetNewVal(SrodekX, value, 999);
+                    SrodekX = Utils.GetNewVal(SrodekX, value);
                     SrodekImage = Image;
                     return SrodekX;
                     break;
                 case 2:
-                    SrodekY = Utils.GetNewVal(SrodekY, value, 999);
+                    SrodekY = Utils.GetNewVal(SrodekY, value);
                     SrodekImage = Image;
                     return SrodekY;
                     break;
                 case 3:
-                    SrodekR = Utils.GetNewVal(SrodekR, value, 999);
+                    SrodekR = Utils.GetNewVal(SrodekR, value);
                     SrodekImage = Image;
                     return SrodekR;
                     break;
                 case 4:
-                    WyjscieX = Utils.GetNewVal(WyjscieX, value, 999);
+                    WyjscieX = Utils.GetNewVal(WyjscieX, value);
                     WyjscieImage = Image;
                     return WyjscieX;
                     break;
                 case 5:
-                    WyjscieY = Utils.GetNewVal(WyjscieY, value, 999);
+                    WyjscieY = Utils.GetNewVal(WyjscieY, value);
                     WyjscieImage = Image;
                     return WyjscieY;
                     break;
                 case 6:
-                    WyjscieR = Utils.GetNewVal(WyjscieR, value, 999);
+                    WyjscieR = Utils.GetNewVal(WyjscieR, value, minVal:1);
                     WyjscieImage = Image;
                     return WyjscieR;
                     break;
@@ -154,37 +179,37 @@ namespace Labeller
                     return Obrzek;
                     break;
                 case 9:
-                    PierscienX = Utils.GetNewVal(PierscienX, value, 999);
+                    PierscienX = Utils.GetNewVal(PierscienX, value);
                     PierscienImage = Image;
                     return PierscienX;
                     break;
                 case 10:
-                    PierscienY = Utils.GetNewVal(PierscienY, value, 999);
+                    PierscienY = Utils.GetNewVal(PierscienY, value);
                     PierscienImage = Image;
                     return PierscienY;
                     break;
                 case 11:
-                    PierscienR = Utils.GetNewVal(PierscienR, value, 999);
+                    PierscienR[currentAngle] = Utils.GetNewVal(PierscienR[currentAngle], value, minVal:-1);
                     PierscienImage = Image;
-                    return (int)PierscienR;
+                    return (int)PierscienR[currentAngle];
                     break;
                 case 12:
-                    PierscienStartR = Utils.GetNewVal(PierscienStartR, value, PierscienR);
+                    PierscienStartR[currentAngle] = Utils.GetNewVal(PierscienStartR[currentAngle], value, PierscienR[currentAngle], minVal:0);
                     PierscienImage = Image;
-                    return (int)PierscienStartR;
+                    return (int)PierscienStartR[currentAngle];
                     break;
                 case 13:
-                    PierscienStartAngle[currentAngle] = Utils.GetNewVal(PierscienStartAngle[currentAngle], value, PierscienStopAngle[currentAngle]);
+                    PierscienStartAngle[currentAngle] = Utils.GetNewVal(PierscienStartAngle[currentAngle], value, PierscienStopAngle[currentAngle], minVal:0);
                     PierscienImage = Image;
                     return (int)PierscienStartAngle[currentAngle];
                     break;
                 case 14:
-                    PierscienStopAngle[currentAngle] = Utils.GetNewVal(PierscienStopAngle[currentAngle], value, 360);
+                    PierscienStopAngle[currentAngle] = Utils.GetNewVal(PierscienStopAngle[currentAngle], value, maxVal:360, minVal:0);
                     PierscienImage = Image;
                     return (int)PierscienStopAngle[currentAngle];
                     break;
-                case 7:
-                    eye = Utils.GetNewVal(eye, value, 1);
+                case 0:
+                    eye = Utils.GetNewVal(eye, value, eyeMax);
                     eyeImage = Image;
                     return eye;
 
@@ -193,67 +218,22 @@ namespace Labeller
         }
 
         
-        public static void writeHeader(CsvWriter writer)
+       
+        public void reloadPatient(String path)
         {
-            writer.WriteField("Patient");
-            writer.WriteField("Date");
-            writer.WriteField("Eye");
-            writer.WriteField("EyeImage");
-            writer.WriteField("Width");
-            writer.WriteField("Height");
-            writer.WriteField("SrodekX");
-            writer.WriteField("SrodekY");
-            writer.WriteField("SrodekR");
-            writer.WriteField("SrodekImage");
-            writer.WriteField("WyjscieX");
-            writer.WriteField("WyjscieY");
-            writer.WriteField("WyjscieR");
-            writer.WriteField("WyjscieImage");
-            writer.WriteField("Krawedz");
-            writer.WriteField("KrawedzImage");
-            writer.WriteField("Obrzek");
-            writer.WriteField("ObrzekImage");
-            writer.WriteField("PierscienX");
-            writer.WriteField("PierscienY");
-            writer.WriteField("PierscienR");
-            writer.WriteField("PierscienStartR");
-            writer.WriteField("PierscienStartAngle");
-            writer.WriteField("PierscienStopAngle");
-            writer.WriteField("PierscienImage");
+            this.Patient = Utils.getPatient(path);
+            this.Date = Utils.getDate(path);
+            this.eye = Utils.reverseEyeName(Utils.getEye(path, eye));
 
         }
 
-        public void writeRecord(CsvWriter writer, String path)
+        public CSVRecord getRecordFromStructure(String path)
         {
-
-
-            writer.WriteField(Utils.getPatient(path));
-            writer.WriteField(Utils.getDate(path));
-            writer.WriteField(Utils.getEye(path, eye));
-            writer.WriteField(eyeImage);
-            writer.WriteField(ImageSlider.WIDTH);
-            writer.WriteField(ImageSlider.HEIGHT);
-            writer.WriteField(SrodekX);
-            writer.WriteField(SrodekY);
-            writer.WriteField(SrodekR);
-            writer.WriteField(SrodekImage);
-            writer.WriteField(WyjscieX);
-            writer.WriteField(WyjscieY);
-            writer.WriteField(WyjscieR);
-            writer.WriteField(WyjscieImage);
-            writer.WriteField(Krawedz);
-            writer.WriteField(KrawedzImage);
-            writer.WriteField(Obrzek);
-            writer.WriteField(ObrzekImage);
-            writer.WriteField(PierscienX);
-            writer.WriteField(PierscienY);
-            writer.WriteField(PierscienR);
-            writer.WriteField(PierscienStartR);
-            writer.WriteField(string.Join("-", PierscienStartAngle));
-            writer.WriteField(string.Join("-", PierscienStopAngle));
-            writer.WriteField(PierscienImage);
-            
+            reloadPatient(path);
+            return Mapper.Map<CSVRecord>(this);
         }
+
+       
         
       
     }

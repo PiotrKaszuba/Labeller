@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoMapper;
 using CsvHelper;
 using Labeller.Properties;
 
@@ -18,26 +19,33 @@ namespace Labeller
     {
         public List<String> items;
         public ImageSlider slider;
-        public PathProvider pathProvider;
+        
+        public PathStorer pathStorer;
         public CSVSaver CSVSaver;
         public CSVStructure CSVStructure;
         public InformationCSVMerger<PatientRecord> cSVMerger;
         public int currentParameter;
         public int showing = 1;
+
+    
         public Form1()
         {
             InitializeComponent();
-            CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + Resources.dataRelativePath);
-            pathProvider = new PathProvider(CSVSaver);
+            Utils.initAutoMapper();
+            PropertiesReader.loadValues();
+            CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + PropertiesReader.OUTPUT_CSV_RELATIVE_PATH);
+            PathAnalyzer pathAnalyzer = new PathAnalyzer(new PathProvider(), CSVSaver, false);
+
+            pathStorer = new PathStorer(pathAnalyzer);
            
             currentParameter = 0;
-            cSVMerger = new InformationCSVMerger<PatientRecord>(Directory.GetCurrentDirectory() + Resources.patientDataRelativePath);
+            cSVMerger = new InformationCSVMerger<PatientRecord>(Directory.GetCurrentDirectory() + PropertiesReader.PATIENT_DATA_RELATIVE_PATH);
 
         }
         private void loadPatientInfo()
         {
-            PatientCountValue.Text = "" + pathProvider.currentPath;
-           PatientRecord rec =  InformationCSVMerger<PatientRecord>.getRecord(pathProvider.paths[pathProvider.currentPath], cSVMerger.getRecords());
+            PatientCountValue.Text = "" + pathStorer.currentPath;
+           PatientRecord rec =  InformationCSVMerger<PatientRecord>.getRecord(pathStorer.paths[pathStorer.currentPath], cSVMerger.getRecords());
            
             if (rec == null)
             {
@@ -54,7 +62,7 @@ namespace Labeller
                 DescriptionBox.Text = rec.description1;
             }
             loadImageInfo();
-            CSVStructure = new CSVStructure();
+            CSVStructure = CSVStructure.getStructure(pathStorer.getCurrentRecord());
         }
         private void loadImageInfo()
         {
@@ -89,14 +97,21 @@ namespace Labeller
         }
         private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
-            ModifyCurrentParameter(e.Delta > 0 ? 1 : -1);
+            int magnitude = 1;
+            if ((Control.ModifierKeys & Keys.Shift) != Keys.None)
+                magnitude = 15;
+              ModifyCurrentParameter(e.Delta > 0 ? magnitude : -magnitude);
             refreshFeatures();
         }
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode.Equals(Keys.Delete))
+            {
+                pathStorer.deleteLoadedRecord();
+            }
             if (e.KeyCode.Equals(Keys.Back))
             {
-                CSVSaver.deleteLastRecord();
+                CSVSaver.deleteRecord();
             }
             if (e.KeyCode.Equals(Keys.Q))
             {
@@ -121,7 +136,7 @@ namespace Labeller
             }
             if (e.KeyCode.Equals(Keys.Escape))
             {
-                CSVSaver.saveToCSV(CSVStructure, pathProvider.paths[pathProvider.currentPath]);
+                CSVSaver.saveToCSV(CSVStructure, pathStorer.paths[pathStorer.currentPath]);
             }
             if (e.KeyCode.Equals(Keys.Space))
             {
@@ -129,13 +144,13 @@ namespace Labeller
             }
             if (e.KeyCode.Equals(Keys.A))
             {
-                slider = new ImageSlider(pathProvider.changePath(-1), pictureBox1);
+                slider = new ImageSlider(pathStorer.changePath(-1), pictureBox1);
                 loadPatientInfo();
                 refreshFeatures();
             }
             if (e.KeyCode.Equals(Keys.D))
             {
-                slider = new ImageSlider(pathProvider.changePath(1), pictureBox1);
+                slider = new ImageSlider(pathStorer.changePath(1), pictureBox1);
                 loadPatientInfo();
                 refreshFeatures();
             }

@@ -34,10 +34,20 @@ namespace Labeller
 
         public int PierscienX { get; set; }
         public int PierscienY { get; set; }
-        public int PierscienR { get; set; }
-        public int PierscienStartR { get; set; }
+        public String PierscienR { get; set; }
+        public String PierscienStartR { get; set; }
         public String PierscienStartAngle { get; set; }
         public String PierscienStopAngle { get; set; }
         public String PierscienImage { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            CSVRecord ob = (CSVRecord)obj;
+            if (this.Patient.Equals(ob.Patient) && this.Date.Equals(ob.Date) && this.Eye.Equals(ob.Eye) && this.EyeImage.Equals(ob.EyeImage) && this.SrodekImage.Equals(ob.SrodekImage)
+                && this.WyjscieImage.Equals(ob.WyjscieImage) && this.KrawedzImage.Equals(ob.KrawedzImage)
+                && this.ObrzekImage.Equals(ob.ObrzekImage) && this.PierscienImage.Equals(ob.PierscienImage))
+                return true;
+            else return false;
+        }
     }
 }

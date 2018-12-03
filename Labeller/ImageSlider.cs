@@ -26,7 +26,7 @@ namespace Labeller
             
             this.box = box;
             this.path = path;
-            imagePaths = Directory.GetFiles(this.path, Resources.imageExtension);
+            imagePaths = Directory.GetFiles(this.path, PropertiesReader.IMAGE_EXTENSION);
             currentImage = 0;
             loadImage();
         }

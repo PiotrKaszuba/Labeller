@@ -59,50 +59,5 @@ namespace Labeller.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu /data.csv.
-        /// </summary>
-        internal static string dataRelativePath {
-            get {
-                return ResourceManager.GetString("dataRelativePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu *.jpg.
-        /// </summary>
-        internal static string imageExtension {
-            get {
-                return ResourceManager.GetString("imageExtension", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu /data_anonymized_and_after_extraction.csv.
-        /// </summary>
-        internal static string patientDataRelativePath {
-            get {
-                return ResourceManager.GetString("patientDataRelativePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu C:/Users/Piotr/AppData/Local/Programs/Python/Python36/python.exe.
-        /// </summary>
-        internal static string pythonPath {
-            get {
-                return ResourceManager.GetString("pythonPath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu /template.py.
-        /// </summary>
-        internal static string pythonPathProviderRelativePath {
-            get {
-                return ResourceManager.GetString("pythonPathProviderRelativePath", resourceCulture);
-            }
-        }
     }
 }

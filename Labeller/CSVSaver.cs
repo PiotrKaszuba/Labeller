@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Labeller
 {
     public class CSVSaver
     {
-        private String deleted = null;
+        private CSVRecord deleted = null;
         public String CsvPath;
         public CSVSaver(String CsvPath)
         {
@@ -31,8 +32,8 @@ namespace Labeller
             {
                 csvWriter.Configuration.Delimiter = ",";
                 csvWriter.Configuration.HasHeaderRecord = true;
-
-                CSVStructure.writeHeader(csvWriter);
+                csvWriter.Configuration.AutoMap<CSVRecord>();
+                csvWriter.WriteHeader<CSVRecord>();
                 csvWriter.NextRecord();
                 writer.Flush();
             }
@@ -40,34 +41,70 @@ namespace Labeller
         public void addDeleted()
         {
             if (deleted == null) return;
-      
-            File.AppendAllLines(CsvPath, new String[] { deleted });
-            MessageBox.Show("Ponownie dopisano wiersz:\n" + deleted);
+
+            saveRecordsToCsv(new CSVRecord[] { deleted });
+            MessageBox.Show("Ponownie dopisano wiersz:\n" + buildRecordString(deleted));
             deleted = null;
         }
-        public void deleteLastRecord()
+        public void deleteRecord(CSVRecord record)
         {
-            String[] lines = File.ReadAllLines(CsvPath);
-            int len = lines.Length - 1;
-            if (len > 0)
-            {
-                String[] newLines = new String[len];
-                Array.Copy(lines, newLines, len);
-                deleted = lines[len];
-                MessageBox.Show("Usuwanie wiersza:\n" + lines[len] +"\nPozostało wierszy: "+(len-1));
-                rewriteCSV(newLines);
-            }
+            if (record == null) return;
 
+            deleteTemplate(readCSV(), record);
         }
 
-        private void rewriteCSV(String[] lines)
+        public String buildRecordString(CSVRecord record)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(record))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(record);
+                sb.Append(name + ": " + value + ", ");
+            }
+            return sb.ToString();
+        }
+
+        private List<CSVRecord> readCSV()
+        {
+            InformationCSVMerger<CSVRecord> informationCSVMerger = new InformationCSVMerger<CSVRecord>(CsvPath);
+
+            return  informationCSVMerger.getRecords();
+        }
+        public void deleteRecord()
+        {
+            List<CSVRecord> records = readCSV();
+            if (records.Count == 0) return;
+            CSVRecord removed = records.Last();
+
+            deleteTemplate(records, removed);
+           
+
+        }
+        private void deleteTemplate(List<CSVRecord> records, CSVRecord toDelete)
+        {
+            bool removed = records.Remove(toDelete);
+           
+            if (removed) {
+                deleted = toDelete;
+                String recordString = buildRecordString(toDelete);
+                MessageBox.Show("Pozostało wierszy: "+ records.Count+"\nUsuwanie wiersza:\n" + recordString);
+                rewriteCSV(records);
+            }
+
+            
+        }
+        private void rewriteCSV(List<CSVRecord> records)
         {
            
             try
             {
                 if (File.Exists(CsvPath))
                     File.Delete(CsvPath);
-                File.WriteAllLines(CsvPath, lines);
+
+                writeHeader();
+                saveRecordsToCsv(records.ToArray());
+
                 
             }
             catch (Exception e)
@@ -76,7 +113,7 @@ namespace Labeller
             }
 
         }
-        public void saveToCSV(CSVStructure record, String path)
+        private void saveRecordsToCsv(CSVRecord[] records)
         {
             try
             {
@@ -84,26 +121,30 @@ namespace Labeller
                 using (var csvWriter = new CsvWriter(writer))
                 {
                     csvWriter.Configuration.Delimiter = ",";
-                    csvWriter.Configuration.HasHeaderRecord = true;
+                    csvWriter.Configuration.HasHeaderRecord = false;
+
+                    csvWriter.WriteRecords<CSVRecord>(records);
 
 
-                    record.writeRecord(csvWriter, path);
 
-
-                    csvWriter.NextRecord();
+                    
                     writer.Flush();
 
-                 
+
                 }
-             
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show("Nie mozna zapisac - zamknij plik z danymi");
             }
+        }
 
-            String[] lines = File.ReadAllLines(CsvPath);
-            MessageBox.Show("Zapisano wiersz: \n" + lines[lines.Length - 1]);
+        public void saveToCSV(CSVStructure record, String path)
+        {
+            CSVRecord rec = record.getRecordFromStructure(path);
+            saveRecordsToCsv(new CSVRecord[] { rec });
+            MessageBox.Show("Zapisano wiersz:\n" + buildRecordString(rec));
         }
     }
 }

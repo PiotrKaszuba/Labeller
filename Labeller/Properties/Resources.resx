@@ -117,19 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="dataRelativePath" xml:space="preserve">
-    <value>/data.csv</value>
-  </data>
-  <data name="imageExtension" xml:space="preserve">
-    <value>*.jpg</value>
-  </data>
-  <data name="patientDataRelativePath" xml:space="preserve">
-    <value>/data_anonymized_and_after_extraction.csv</value>
-  </data>
-  <data name="pythonPath" xml:space="preserve">
-    <value>C:/Users/Piotr/AppData/Local/Programs/Python/Python36/python.exe</value>
-  </data>
-  <data name="pythonPathProviderRelativePath" xml:space="preserve">
-    <value>/template.py</value>
-  </data>
 </root>
