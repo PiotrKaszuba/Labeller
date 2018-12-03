@@ -1,8 +1,8 @@
 # Labeller
 Tool to label image data
 
-- Change resource of app to match Python path and other paths from Resources
+- Change Properties.txt to match Python path and other paths from Properties
 
 Add to working directory:
-- Python files from DEBUG directory (+ change path to patient folders directories in template.py)
+- Python files from DEBUG directory
 - data_anonymized_and_after_extraction.csv
