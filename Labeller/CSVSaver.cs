@@ -12,7 +12,7 @@ namespace Labeller
 {
     public class CSVSaver
     {
-        private CSVRecord deleted = null;
+        public CSVRecord deleted = null;
         public String CsvPath;
         public CSVSaver(String CsvPath)
         {
@@ -53,7 +53,7 @@ namespace Labeller
             deleteTemplate(readCSV(), record);
         }
 
-        public String buildRecordString(CSVRecord record)
+        public static String buildRecordString(CSVRecord record)
         {
             StringBuilder sb = new StringBuilder();
             foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(record))

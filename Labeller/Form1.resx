@@ -130,6 +130,8 @@ L - left/right eye
 Z/X - previous/next Pierscien angle
 Control - hide/show drawings
 Backspace/Delete - delete last/loaded row from CSV
-Space - add last deleted row again - only 1 in memory!</value>
+Space - add last deleted row again - only 1 in memory!
+B/N/M - Toggle: visibility of Srodek/Wyjscie/Pierscien
+P - Toggle: show new Patients/labelled Patients</value>
   </data>
 </root>

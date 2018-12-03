@@ -42,6 +42,7 @@ namespace Labeller
         {
             String patient = Utils.getPatient(path);
             String date = Utils.getDate(path);
+           
 
             return list.Find(x => x.Patient.Equals(patient) && x.Date.Equals(date));
         }

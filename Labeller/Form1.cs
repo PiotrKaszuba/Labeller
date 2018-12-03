@@ -19,14 +19,14 @@ namespace Labeller
     {
         public List<String> items;
         public ImageSlider slider;
-        
+        public ImageDrawer drawer;
         public PathStorer pathStorer;
         public CSVSaver CSVSaver;
-        public CSVStructure CSVStructure;
+        public CSVStructure CSVStructure = null;
         public InformationCSVMerger<PatientRecord> cSVMerger;
         public int currentParameter;
         public int showing = 1;
-
+        public int labelledPatients = 0;
     
         public Form1()
         {
@@ -34,13 +34,14 @@ namespace Labeller
             Utils.initAutoMapper();
             PropertiesReader.loadValues();
             CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + PropertiesReader.OUTPUT_CSV_RELATIVE_PATH);
-            PathAnalyzer pathAnalyzer = new PathAnalyzer(new PathProvider(), CSVSaver, false);
+            PathAnalyzer pathAnalyzer = new PathAnalyzer(new PathProvider(), CSVSaver, true);
 
             pathStorer = new PathStorer(pathAnalyzer);
            
             currentParameter = 0;
             cSVMerger = new InformationCSVMerger<PatientRecord>(Directory.GetCurrentDirectory() + PropertiesReader.PATIENT_DATA_RELATIVE_PATH);
-
+            drawer = new ImageDrawer();
+            refreshFeatures();
         }
         private void loadPatientInfo()
         {
@@ -61,22 +62,35 @@ namespace Labeller
                 ICDValue.Text = rec.correct_icd_code;
                 DescriptionBox.Text = rec.description1;
             }
-            loadImageInfo();
             CSVStructure = CSVStructure.getStructure(pathStorer.getCurrentRecord());
+            loadImageInfo();
+           
         }
         private void loadImageInfo()
         {
             ImagePathValue.Text = slider.imagePaths[slider.currentImage];
             ImageValue.Text = Path.GetFileName(ImagePathValue.Text);
+            drawer.setImage(slider.image);
+            refreshFeatures();
         }
         private void refreshFeatures()
         {
-            for (int i =0; i <= CSVStructure.maxParameter; i++)
+            if(CSVStructure != null)
             {
-                listView1.Items[i].Text = CSVStructure.getShowText(i);
+                for (int i = 0; i <= CSVStructure.maxParameter; i++)
+                {
+                    listView1.Items[i].Text = CSVStructure.getShowText(i);
+                }
+                pictureBox1.Image = drawer.Draw(CSVStructure);
             }
+           
+            listView1.Items[16].Text = "Srodek Visibility: " + drawer.visibitySrodek;
+            listView1.Items[17].Text = "Wyjscie Visibility: " + drawer.visibityWyjscie;
+            listView1.Items[18].Text = "Pierscien Visibility: " + drawer.visibityPierscien;
             
-            pictureBox1.Image = ImageDrawer.Draw((Image)slider.image.Clone(), CSVStructure);
+
+            listView1.Items[19].Text = "Loading patients: " + (labelledPatients > 0 ? "labelled" : "new");
+            listView1.Items[20].Text = "Stored row: " + CSVSaver.buildRecordString(CSVSaver.deleted);
 
         }
         private void changeCurrentParameter(int value)
@@ -105,13 +119,36 @@ namespace Labeller
         }
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
+            if (e.KeyCode.Equals(Keys.P))
+            {
+                labelledPatients = Utils.GetNewVal(labelledPatients, 1, maxVal: 1, minVal: 0);
+                refreshFeatures();
+            }
+            if (e.KeyCode.Equals(Keys.B))
+            {
+                drawer.visibitySrodek ^= true;
+                refreshFeatures();
+            }
+            if (e.KeyCode.Equals(Keys.N))
+            {
+                drawer.visibityWyjscie ^= true;
+                refreshFeatures();
+            }
+            if (e.KeyCode.Equals(Keys.M))
+            {
+                drawer.visibityPierscien ^= true;
+                refreshFeatures();
+            }
             if (e.KeyCode.Equals(Keys.Delete))
             {
                 pathStorer.deleteLoadedRecord();
+                refreshFeatures();
             }
             if (e.KeyCode.Equals(Keys.Back))
             {
                 CSVSaver.deleteRecord();
+                refreshFeatures();
             }
             if (e.KeyCode.Equals(Keys.Q))
             {
@@ -141,16 +178,19 @@ namespace Labeller
             if (e.KeyCode.Equals(Keys.Space))
             {
                 CSVSaver.addDeleted();
+                refreshFeatures();
             }
             if (e.KeyCode.Equals(Keys.A))
             {
-                slider = new ImageSlider(pathStorer.changePath(-1), pictureBox1);
+                if (CSVStructure != null)  pathStorer.storeCSVRecord(CSVStructure.getRecordFromStructure(pathStorer.paths[pathStorer.currentPath]));
+                slider = new ImageSlider(pathStorer.changePath(-1, labelledPatients:labelledPatients), pictureBox1);
                 loadPatientInfo();
                 refreshFeatures();
             }
             if (e.KeyCode.Equals(Keys.D))
             {
-                slider = new ImageSlider(pathStorer.changePath(1), pictureBox1);
+                if(CSVStructure!=null) pathStorer.storeCSVRecord(CSVStructure.getRecordFromStructure(pathStorer.paths[pathStorer.currentPath]));
+                slider = new ImageSlider(pathStorer.changePath(1, labelledPatients: labelledPatients), pictureBox1);
                 loadPatientInfo();
                 refreshFeatures();
             }
@@ -188,7 +228,7 @@ namespace Labeller
                     showing = 1;
                 }
         }
-           
+            
 
         }
 
@@ -213,6 +253,11 @@ namespace Labeller
 
 
             refreshFeatures();
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
