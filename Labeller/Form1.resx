@@ -123,7 +123,7 @@ ESC - save to CSV
 A/D - previous/next patient
 Left/Right - previous/next image
 Up/Down - previous/next parameter
-Mouse scroll - modify highlited parameter +Shift x10 magnitude
+Mouse scroll - modify highlited parameter +Shift x15 magnitude
 Left image click - Srodek Tarczy + Pierscien center
 Right image click - Wyjscie naczyn center
 L - left/right eye
