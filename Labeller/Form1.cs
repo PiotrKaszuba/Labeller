@@ -173,6 +173,8 @@ namespace Labeller
             }
             if (e.KeyCode.Equals(Keys.Escape))
             {
+                CSVStructure.Width = ImageSlider.WIDTH;
+                CSVStructure.Height = ImageSlider.HEIGHT;
                 CSVSaver.saveToCSV(CSVStructure, pathStorer.paths[pathStorer.currentPath]);
             }
             if (e.KeyCode.Equals(Keys.Space))

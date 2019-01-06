@@ -20,7 +20,7 @@ namespace Labeller
         public int currentImage;
         public Image image;
         public static int WIDTH= 600;
-        public static int HEIGHT = 400;
+        public static int HEIGHT = 450;
         public ImageSlider(String path, PictureBox box)
         {
             

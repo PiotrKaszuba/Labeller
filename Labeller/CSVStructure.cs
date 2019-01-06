@@ -33,8 +33,8 @@ namespace Labeller
         public List<int> PierscienStopAngle = new List<int>();
         public String PierscienImage { get; set; } = "";
 
-        private int PierscienRDefault = 38;
-        private int PierscienStartRDefault = 35;
+        private int PierscienRDefault = 45;
+        private int PierscienStartRDefault = 39;
         private int PierscienStartAngleDefault = 0;
         private int PierscienStopAngleDefault = 360;
 
@@ -65,7 +65,7 @@ namespace Labeller
         //Srodek
         public int SrodekX { get; set; } = -1;
         public int SrodekY { get; set; } = -1;
-        public int SrodekR { get; set; } = 38;
+        public int SrodekR { get; set; } = 36;
         public String SrodekImage { get; set; } = "";
 
         public static CSVStructure getStructure(CSVRecord CSVRecord = null)
@@ -90,7 +90,7 @@ namespace Labeller
             if(currentAngle >= PierscienStartAngle.Count)
             {
                 PierscienR.Add(PierscienRDefault);
-                PierscienStartR.Add(PierscienStartRDefault);
+                PierscienStartR.Add(SrodekR + 3);
                 PierscienStartAngle.Add(PierscienStartAngleDefault);
                 PierscienStopAngle.Add(PierscienStopAngleDefault);
             }
@@ -189,24 +189,52 @@ namespace Labeller
                     return PierscienY;
                     break;
                 case 11:
-                    PierscienR[currentAngle] = Utils.GetNewVal(PierscienR[currentAngle], value, minVal:-1);
-                    PierscienImage = Image;
-                    return (int)PierscienR[currentAngle];
+                    try
+                    {
+                        PierscienR[currentAngle] = Utils.GetNewVal(PierscienR[currentAngle], value, minVal: -1);
+                        PierscienImage = Image;
+                        return (int)PierscienR[currentAngle];
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
                     break;
                 case 12:
-                    PierscienStartR[currentAngle] = Utils.GetNewVal(PierscienStartR[currentAngle], value, PierscienR[currentAngle], minVal:0);
-                    PierscienImage = Image;
-                    return (int)PierscienStartR[currentAngle];
+                    try
+                    {
+                        PierscienStartR[currentAngle] = Utils.GetNewVal(PierscienStartR[currentAngle], value, PierscienR[currentAngle], minVal: 0);
+                        PierscienImage = Image;
+                        return (int)PierscienStartR[currentAngle];
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
                     break;
                 case 13:
-                    PierscienStartAngle[currentAngle] = Utils.GetNewVal(PierscienStartAngle[currentAngle], value, PierscienStopAngle[currentAngle], minVal:0);
-                    PierscienImage = Image;
-                    return (int)PierscienStartAngle[currentAngle];
+                    try
+                    {
+                        PierscienStartAngle[currentAngle] = Utils.GetNewVal(PierscienStartAngle[currentAngle], value, PierscienStopAngle[currentAngle], minVal: 0);
+                        PierscienImage = Image;
+                        return (int)PierscienStartAngle[currentAngle];
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
                     break;
                 case 14:
-                    PierscienStopAngle[currentAngle] = Utils.GetNewVal(PierscienStopAngle[currentAngle], value, maxVal:360, minVal:0);
-                    PierscienImage = Image;
-                    return (int)PierscienStopAngle[currentAngle];
+                    try
+                    {
+                        PierscienStopAngle[currentAngle] = Utils.GetNewVal(PierscienStopAngle[currentAngle], value, maxVal: 360, minVal: 0);
+                        PierscienImage = Image;
+                        return (int)PierscienStopAngle[currentAngle];
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
                     break;
                 case 0:
                     eye = Utils.GetNewVal(eye, value, eyeMax);
