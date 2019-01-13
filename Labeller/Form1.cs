@@ -261,5 +261,11 @@ namespace Labeller
         {
             e.Handled = true;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ImageSetCreator isc = new ImageSetCreator();
+            isc.go(CSVSaver);
+        }
     }
 }

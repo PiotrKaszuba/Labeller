@@ -12,7 +12,13 @@ namespace Labeller
         public bool visibitySrodek = true;
         public bool visibityWyjscie = true;
         public bool visibityPierscien= true;
+        public Color kolorPierscien = Color.Red;
         private Image image;
+
+        public Image getImage()
+        {
+            return image;
+        }
 
         public void setImage(Image image)
         {
@@ -50,7 +56,7 @@ namespace Labeller
                 int diameter = (int)ob.PierscienR[i] * 2 - (int)penWidth;
                 int rectLeft = ob.PierscienX - (int)(diameter / 2);
                 int rectTop = ob.PierscienY - (int)(diameter / 2);
-                Pen myPen = new Pen(Color.Red, penWidth);
+                Pen myPen = new Pen(kolorPierscien, penWidth);
                 int arc = (int)ob.PierscienStopAngle[i] - (int)ob.PierscienStartAngle[i];
                 Rectangle rect = new Rectangle(rectLeft,  rectTop, diameter, diameter);
                 g.DrawArc(myPen, rect, (int)ob.PierscienStartAngle[i], arc);

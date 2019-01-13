@@ -65,6 +65,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageDrawer.cs" />
+    <Compile Include="ImageSetCreator.cs" />
     <Compile Include="ImageSlider.cs" />
     <Compile Include="InformationCSVMerger.cs" />
     <Compile Include="PathAnalyzer.cs" />
