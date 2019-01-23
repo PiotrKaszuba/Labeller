@@ -1,7 +1,7 @@
-﻿Patient,Date,Eye,EyeImage,Width,Height,SrodekX,SrodekY,SrodekR,SrodekImage,WyjscieX,WyjscieY,WyjscieR,WyjscieImage,Krawedz,KrawedzImage,Obrzek,ObrzekImage,PierscienX,PierscienY,PierscienR,PierscienStartR,PierscienStartAngle,PierscienStopAngle,PierscienImage
+Patient,Date,Eye,EyeImage,Width,Height,SrodekX,SrodekY,SrodekR,SrodekImage,WyjscieX,WyjscieY,WyjscieR,WyjscieImage,Krawedz,KrawedzImage,Obrzek,ObrzekImage,PierscienX,PierscienY,PierscienR,PierscienStartR,PierscienStartAngle,PierscienStopAngle,PierscienImage
 D_9f59f5819d153712854ad3b3ac47609d,2014-11-04,right_eye_images,0017.jpg,600,450,464,253,33,0017.jpg,471,249,8,0017.jpg,0,0017.jpg,-1,,464,253,47-49-43,39-37-36,0-335-135,48-360-246,0017.jpg
 D_1d30622b6fa1e93ba70899a833177939,2014-12-16,right_eye_images,0011.jpg,600,450,509,229,34,0011.jpg,514,230,8,0011.jpg,0,0011.jpg,-1,,509,229,54,39,115,216,0011.jpg
-D_8af8cf581580c84ef686ef8956cea9af,2014-09-26,right_eye_images,0012.jpg,600,450,415,250,39,0012.jpg,427,246,9,0012.jpg,0,0012.jpg,-1,,415,250,57,42,126,242,0012.jpg
+D_9b5f045ed5dc3624bff2e9b9bc5e889c,2014-09-30,right_eye_images,0012.jpg,600,450,541,244,35,0012.jpg,539,249,8,0012.jpg,0,0012.jpg,-1,,541,244,57-49-51,38-35-38,130-204-118,205-240-131,0012.jpg
 D_8af8cf581580c84ef686ef8956cea9af,2014-09-26,left_eye_images,0016.jpg,600,450,125,256,39,0016.jpg,112,258,9,0016.jpg,0,0012.jpg,-1,,125,256,58-58-51,40-40-40,0-332-24,24-360-50,0016.jpg
 D_8af8cf581580c84ef686ef8956cea9af,2014-09-26,right_eye_images,0012.jpg,600,450,410,249,39,0012.jpg,427,250,8,0012.jpg,0,0012.jpg,-1,,410,249,48-59-48,42-42-42,122-138-202,138-202-236,0012.jpg
 D_3ed62ef19b63c04087f1335f7edc501b,2014-10-23,left_eye_images,0011.jpg,600,450,96,256,33,0011.jpg,83,245,8,0011.jpg,1,0011.jpg,-1,,96,256,44-44,36-36,285-0,360-43,0011.jpg

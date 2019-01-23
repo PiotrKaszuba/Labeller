@@ -134,4 +134,7 @@ Space - add last deleted row again - only 1 in memory!
 B/N/M - Toggle: visibility of Srodek/Wyjscie/Pierscien
 P - Toggle: show new Patients/labelled Patients</value>
   </data>
+  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

@@ -31,6 +31,7 @@ namespace Labeller
         public Form1()
         {
             InitializeComponent();
+            trackBar1.SendToBack();
             Utils.initAutoMapper();
             PropertiesReader.loadValues();
             CSVSaver = new CSVSaver(Directory.GetCurrentDirectory() + PropertiesReader.OUTPUT_CSV_RELATIVE_PATH);
@@ -265,7 +266,21 @@ namespace Labeller
         private void button1_Click(object sender, EventArgs e)
         {
             ImageSetCreator isc = new ImageSetCreator();
-            isc.go(CSVSaver);
+            List<ImagePair> data = isc.go(CSVSaver);
+
+            if (checkBox1.Checked)
+            {
+                isc.save_cross_repo(data, Prompt.ShowDialog("Nazwa repozytorium", "Podaj nazwę repozytorium"), trackBar1.Value);
+            }
+            else
+            {
+                isc.save_normal_repo(data, Prompt.ShowDialog("Nazwa repozytorium", "Podaj nazwę repozytorium"));
+            }
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            label2.Text = trackBar1.Value.ToString();
         }
     }
 }
