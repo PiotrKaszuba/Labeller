@@ -266,7 +266,7 @@ namespace Labeller
         private void button1_Click(object sender, EventArgs e)
         {
             ImageSetCreator isc = new ImageSetCreator();
-            List<ImagePair> data = isc.go(CSVSaver);
+            List<ImagePair> data = isc.go(CSVSaver, checkBox2.Checked);
 
             if (checkBox1.Checked)
             {
@@ -281,6 +281,11 @@ namespace Labeller
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             label2.Text = trackBar1.Value.ToString();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

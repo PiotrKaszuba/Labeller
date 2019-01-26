@@ -37,15 +37,52 @@ namespace Labeller
     }
     class ImageSetCreator
     {
-        public List<ImagePair> go(CSVSaver CSVSaver)
+
+        public ImageDrawer getZanikDrawer()
         {
-            InformationCSVMerger<CSVRecord> informationCSVMerger = new InformationCSVMerger<CSVRecord>(CSVSaver.CsvPath);
-            List<CSVRecord> list = informationCSVMerger.getRecords();
             ImageDrawer id = new ImageDrawer();
             id.visibitySrodek = false;
             id.visibityWyjscie = false;
             id.visibityPierscien = true;
             id.kolorPierscien = Color.White;
+            return id;
+        }
+        public ImageDrawer getWyjscieDrawer()
+        {
+            ImageDrawer id = new ImageDrawer();
+            id.visibitySrodek = false;
+            id.visibityWyjscie = false;
+            id.visibityPierscien = false;
+            id.repoWyjscieDraw = true;
+            id.kolorPierscien = Color.White;
+            return id;
+        }
+
+
+        public List<ImagePair> go(CSVSaver CSVSaver, bool zanik)
+        {
+            int halfW;
+            int halfH;
+            if (zanik)
+            {
+                halfW = 80;
+                halfH = 80;
+            }
+            else
+            {
+                // Połowa wielkości( wysokości i szerokości)
+                halfH = 40;
+                halfW = 40;
+            }
+
+                InformationCSVMerger<CSVRecord> informationCSVMerger = new InformationCSVMerger<CSVRecord>(CSVSaver.CsvPath);
+            List<CSVRecord> list = informationCSVMerger.getRecords();
+            ImageDrawer id;
+            if (zanik)
+                id = getZanikDrawer();
+            else
+                id = getWyjscieDrawer();
+
             Image resultImage = new Bitmap(ImageSlider.WIDTH, ImageSlider.HEIGHT, PixelFormat.Format24bppRgb);
             using (Graphics grp = Graphics.FromImage(resultImage))
             {
@@ -68,7 +105,7 @@ namespace Labeller
 
                 Image drawn = id.Draw(CSVStructure.getStructure(item));
 
-                Rectangle cropRect = new Rectangle(item.PierscienX - 80, item.PierscienY - 80, 160, 160);
+                Rectangle cropRect = new Rectangle(item.PierscienX - halfH, item.PierscienY - halfW, halfH*2, halfW*2);
                 Bitmap src = drawn as Bitmap;
                 Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
 
