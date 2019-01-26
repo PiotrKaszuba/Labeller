@@ -1,6 +1,0 @@
-﻿PATIENT_DATA_RELATIVE_PATH=/data_anonymized_and_after_extraction.csv
-IMAGE_EXTENSION=*.jpg
-OUTPUT_CSV_RELATIVE_PATH=/data.csv
-PATH_PROVIDER_EXECUTABLE_PATH=C:/Users/Piotr/AppData/Local/Programs/Python/Python36/python.exe
-PATH_PROVIDER_CODE_RELATIVE_PATH=/template.py 
-PATH_PROVIDER_ADDITIONAL_ARGS=C:/Users/Piotr/Desktop/Zdjecia/2014c
