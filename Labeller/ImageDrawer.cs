@@ -12,7 +12,7 @@ namespace Labeller
         public bool visibitySrodek = true;
         public bool visibityWyjscie = true;
         public bool visibityPierscien= true;
-        public bool repoWyjscieDraw = false;
+        public bool repoWyjscieDraw = true;
         public Color kolorPierscien = Color.Red;
         public Color kolorWyjscie = Color.Green;
         private Image image;
@@ -34,7 +34,7 @@ namespace Labeller
             if (visibitySrodek) im = drawCenter(im, ob.SrodekX, ob.SrodekY, Color.Blue, ob.SrodekR, new float[] { 1, 4 });
             if (visibityWyjscie) im = drawCenter(im, ob.WyjscieX, ob.WyjscieY, kolorWyjscie, ob.WyjscieR, new float[] { 1, 1 });
             //--------------------------------------------------------------------------------PROMIEN + 2
-            if (repoWyjscieDraw) im = fillCircle(im, ob.WyjscieX, ob.WyjscieY, Brushes.White, ob.WyjscieR+2);
+            if (repoWyjscieDraw) im = fillCircle(im, ob.WyjscieX, ob.WyjscieY, Brushes.White, ob.WyjscieR);
             return im;
         }
 
@@ -42,7 +42,7 @@ namespace Labeller
         {
             Graphics g = Graphics.FromImage(im);
 
-            g.FillEllipse(clr, X, Y, radius, radius);
+            g.FillEllipse(clr, X - radius, Y - radius, radius*2, radius*2);
             return im;
         }
         public Image drawCenter(Image im, int X, int Y, Color clr, int radius, float[] dashValues)
